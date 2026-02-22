@@ -1,0 +1,45 @@
+/* Tailwind + Skeleton UI */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ensure dark background is applied globally */
+html,
+body {
+	@apply bg-surface-900 text-white;
+	height: 100%;
+}
+
+/* Smooth font rendering */
+body {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* AppShell fills the viewport */
+#shell {
+	@apply min-h-screen;
+}
+
+/* Fix input/select/textarea contrast in dark mode.
+   Skeleton's dark surface token makes them darker than the card behind them,
+   which inverts contrast. This brings them slightly above the surface instead. */
+.dark .input,
+.dark .select,
+.dark .textarea {
+	background-color: rgb(var(--color-surface-700) / 0.35);
+	border-color: rgb(var(--color-surface-600) / 0.8);
+}
+
+.dark .input:focus,
+.dark .select:focus,
+.dark .textarea:focus {
+	border-color: rgb(var(--color-primary-500) / 0.7);
+	outline: none;
+	box-shadow: 0 0 0 2px rgb(var(--color-primary-500) / 0.15);
+}
+
+.dark .input::placeholder,
+.dark .textarea::placeholder {
+	color: rgb(var(--color-surface-400));
+}

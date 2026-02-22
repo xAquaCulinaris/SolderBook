@@ -1,0 +1,37 @@
+services:
+  app-dev:
+    profiles: [dev]
+    build:
+      context: .
+      target: builder
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - solderbook-data-dev:/data
+    environment:
+      DATABASE_PATH: /data/solderbook.db
+      NODE_ENV: development
+      PORT: 5173
+    ports:
+      - "5173:5173"
+    command: pnpm dev --host 0.0.0.0
+
+  app-prod:
+    profiles: [prod]
+    build:
+      context: .
+      target: runner
+    volumes:
+      - solderbook-data:/data
+    environment:
+      DATABASE_PATH: /data/solderbook.db
+      NODE_ENV: production
+      PORT: 3000
+      ORIGIN: http://localhost:3000
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  solderbook-data:
+  solderbook-data-dev:

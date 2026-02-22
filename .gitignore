@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# SvelteKit
+.svelte-kit/
+build/
+
+# Vite
+dist/
+.vite/
+
+# Database
+data/
+
+# Drizzle
+drizzle/meta/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+
+# TypeScript
+*.tsbuildinfo

@@ -1,0 +1,28 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "dev",
+			"type": "shell",
+			"command": "pnpm dev",
+			"group": { "kind": "build", "isDefault": true },
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "db:push",
+			"type": "shell",
+			"command": "pnpm db:push"
+		},
+		{
+			"label": "db:seed",
+			"type": "shell",
+			"command": "pnpm db:seed"
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "pnpm build"
+		}
+	]
+}
