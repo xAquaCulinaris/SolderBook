@@ -32,17 +32,18 @@ Single-user, LAN-accessible, runs on a Proxmox LXC container.
 
 ## Project Structure
 
+> **Maintenance rule:** Whenever files are added, moved, or removed, update this section to reflect the change. This keeps the structure accurate for future sessions and agents.
+
 ```
 SolderBook/
-├── CLAUDE.md                          # This file
-├── IMPLEMENTATION_PLAN.md             # Full spec (schema, API, phases, deployment)
+├── CLAUDE.md                          # This file — project context for Claude
 ├── README.md                          # Setup instructions
 ├── package.json
 ├── pnpm-lock.yaml
 ├── svelte.config.js                   # vitePreprocess from @sveltejs/vite-plugin-svelte
 ├── vite.config.ts
 ├── tsconfig.json
-├── tailwind.config.ts                 # Skeleton UI tw-plugin with 'skeleton' theme
+├── tailwind.config.ts                 # Skeleton UI tw-plugin with custom 'solder' theme
 ├── postcss.config.js
 ├── drizzle.config.ts                  # SQLite path from DATABASE_PATH env var
 ├── .env                               # DATABASE_PATH, PORT, NODE_ENV
@@ -51,6 +52,10 @@ SolderBook/
 ├── seed.ts                            # Dev data seeder (pnpm db:seed)
 ├── Dockerfile
 ├── docker-compose.yml                 # dev + prod profiles
+├── docs/                              # Project documentation
+│   ├── DESIGN.md                      # Visual design system (colors, components, patterns)
+│   ├── IMPLEMENTATION_PLAN.md         # Full spec (schema, API, phases, deployment)
+│   └── implementation_plan_prompt.md  # Original prompt used to generate the plan
 ├── .vscode/
 │   ├── extensions.json
 │   ├── launch.json
@@ -69,7 +74,7 @@ SolderBook/
     │   ├── types.ts                   # ConsoleStatus, STATUS_LABELS, STATUS_COLORS
     │   └── utils.ts                   # formatCurrency, formatDate, formatDatetime
     └── routes/
-        ├── +layout.svelte             # AppShell + AppBar nav (Dashboard / Consoles / Parts)
+        ├── +layout.svelte             # AppShell + sidebar nav (Dashboard / Consoles / Parts)
         ├── +page.svelte               # Dashboard
         ├── +page.server.ts            # Dashboard metrics queries
         ├── consoles/
@@ -137,6 +142,19 @@ DATABASE_PATH=./data/solderbook.db
 PORT=3000
 NODE_ENV=development
 ```
+
+---
+
+## Design System
+
+See **`docs/DESIGN.md`** for the full visual design reference, including:
+- Color palette with hex codes and usage rules
+- Form input patterns (custom dark-style inputs, label conventions)
+- Component patterns (cards, buttons, badges, tables, dropdowns)
+- Status color mappings for console statuses and stock levels
+- Spacing and typography conventions
+
+When building new UI, follow the patterns in `DESIGN.md` to stay consistent.
 
 ---
 

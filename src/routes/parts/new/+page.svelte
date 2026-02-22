@@ -20,68 +20,82 @@
 		<div class="alert variant-filled-error"><p>{form.error}</p></div>
 	{/if}
 
-	<form method="POST" use:enhance class="card p-6 space-y-5">
-		<label class="label" for="name">
-			<span>Part Name <span class="text-error-500">*</span></span>
+	<form method="POST" use:enhance class="bg-surface-800/50 border border-surface-700/40 rounded-xl p-6 space-y-5">
+		<!-- Part Name -->
+		<div class="space-y-1.5">
+			<label for="name" class="block text-xs font-semibold uppercase tracking-wider text-surface-400">
+				Part Name <span class="text-error-400 normal-case tracking-normal font-normal">*</span>
+			</label>
 			<input
 				id="name"
 				name="name"
 				type="text"
-				class="input"
+				class="w-full bg-surface-900 border border-surface-600/60 rounded-lg px-4 py-2.5 text-white placeholder:text-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors"
 				placeholder="e.g. HDMI Port, Cooling Fan"
 				required
 			/>
-		</label>
+		</div>
 
-		<label class="label" for="unit_cost">
-			<span>Unit Cost (€) <span class="text-error-500">*</span></span>
-			<input
-				id="unit_cost"
-				name="unit_cost"
-				type="number"
-				class="input"
-				placeholder="0.00"
-				step="0.01"
-				min="0"
-				required
-			/>
-		</label>
+		<!-- Unit Cost -->
+		<div class="space-y-1.5">
+			<label for="unit_cost" class="block text-xs font-semibold uppercase tracking-wider text-surface-400">
+				Unit Cost <span class="text-error-400 normal-case tracking-normal font-normal">*</span>
+			</label>
+			<div class="relative">
+				<span class="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 font-medium select-none">€</span>
+				<input
+					id="unit_cost"
+					name="unit_cost"
+					type="number"
+					class="w-full bg-surface-900 border border-surface-600/60 rounded-lg pl-8 pr-4 py-2.5 text-white placeholder:text-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors"
+					placeholder="0.00"
+					step="0.01"
+					min="0"
+					required
+				/>
+			</div>
+		</div>
 
-		<label class="label" for="quantity">
-			<span>Initial Quantity <span class="text-error-500">*</span></span>
+		<!-- Initial Quantity -->
+		<div class="space-y-1.5">
+			<label for="quantity" class="block text-xs font-semibold uppercase tracking-wider text-surface-400">
+				Initial Quantity <span class="text-error-400 normal-case tracking-normal font-normal">*</span>
+			</label>
 			<input
 				id="quantity"
 				name="quantity"
 				type="number"
-				class="input"
+				class="w-full bg-surface-900 border border-surface-600/60 rounded-lg px-4 py-2.5 text-white placeholder:text-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors"
 				placeholder="0"
 				min="0"
 				required
 			/>
-		</label>
+		</div>
 
 		<!-- Compatible Console Types -->
-		<fieldset class="space-y-2">
-			<legend class="font-semibold text-sm">Compatible Console Types</legend>
+		<div class="space-y-2.5">
+			<p class="text-xs font-semibold uppercase tracking-wider text-surface-400">Compatible Console Types</p>
 			{#if data.types.length === 0}
-				<p class="text-sm text-surface-400">No console types yet. Add a console first.</p>
+				<p class="text-sm text-surface-500">No console types yet. Add a console first.</p>
 			{:else}
-				<div class="grid grid-cols-2 gap-2">
+				<div class="bg-surface-900 border border-surface-600/60 rounded-lg p-3 grid grid-cols-2 gap-1">
 					{#each data.types as t}
-						<label class="flex items-center gap-2 cursor-pointer">
+						<label class="flex items-center gap-2.5 px-2 py-1.5 rounded-md cursor-pointer hover:bg-surface-700/50 transition-colors group">
 							<input
 								type="checkbox"
 								name="console_type_ids"
 								value={t.id}
 								class="checkbox"
 							/>
-							<span class="text-sm">{t.name}</span>
+							<span class="text-sm text-surface-300 group-hover:text-white transition-colors">{t.name}</span>
 						</label>
 					{/each}
 				</div>
 			{/if}
-		</fieldset>
+		</div>
 
-		<button type="submit" class="btn variant-filled-primary w-full">Add Part</button>
+		<div class="pt-1">
+			<button type="submit" class="btn variant-filled-primary w-full">Add Part</button>
+		</div>
 	</form>
 </div>

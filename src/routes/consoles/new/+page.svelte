@@ -34,30 +34,30 @@
 		</div>
 	{/if}
 
-	<form method="POST" use:enhance class="card p-6 space-y-5">
+	<form method="POST" use:enhance class="bg-surface-800/50 border border-surface-700/40 rounded-xl p-6 space-y-5">
 		<!-- Console Type with Autocomplete -->
-		<div class="relative">
-			<label class="label" for="console_type">
-				<span>Console Type <span class="text-error-500">*</span></span>
-				<input
-					id="console_type"
-					name="console_type"
-					type="text"
-					class="input"
-					placeholder="e.g. PS4 Fat, Switch Lite"
-					bind:value={typeInput}
-					on:focus={() => (showSuggestions = true)}
-					on:blur={() => setTimeout(() => (showSuggestions = false), 150)}
-					autocomplete="off"
-					required
-				/>
+		<div class="space-y-1.5 relative">
+			<label for="console_type" class="block text-xs font-semibold uppercase tracking-wider text-surface-400">
+				Console Type <span class="text-error-400 normal-case tracking-normal font-normal">*</span>
 			</label>
+			<input
+				id="console_type"
+				name="console_type"
+				type="text"
+				class="w-full bg-surface-900 border border-surface-600/60 rounded-lg px-4 py-2.5 text-white placeholder:text-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors"
+				placeholder="e.g. PS4 Fat, Switch Lite"
+				bind:value={typeInput}
+				on:focus={() => (showSuggestions = true)}
+				on:blur={() => setTimeout(() => (showSuggestions = false), 150)}
+				autocomplete="off"
+				required
+			/>
 			{#if showSuggestions && suggestions.length > 0}
-				<div class="card shadow-xl absolute z-10 w-full mt-1 p-1 space-y-1">
+				<div class="absolute z-10 w-full mt-1 bg-surface-800 border border-surface-600/60 rounded-lg shadow-xl overflow-hidden">
 					{#each suggestions as t}
 						<button
 							type="button"
-							class="w-full text-left px-3 py-2 rounded hover:variant-ghost-primary"
+							class="w-full text-left px-4 py-2.5 text-sm text-surface-200 hover:bg-primary-500/10 hover:text-white transition-colors"
 							on:click={() => selectType(t.name)}
 						>
 							{t.name}
@@ -65,38 +65,45 @@
 					{/each}
 				</div>
 			{/if}
-			<p class="text-xs text-surface-400 mt-1">
-				Select existing or type a new console type name.
-			</p>
+			<p class="text-xs text-surface-500">Select existing or type a new console type name.</p>
 		</div>
 
 		<!-- Purchase Price -->
-		<label class="label" for="purchase_price">
-			<span>Purchase Price (€) <span class="text-error-500">*</span></span>
-			<input
-				id="purchase_price"
-				name="purchase_price"
-				type="number"
-				class="input"
-				placeholder="0.00"
-				step="0.01"
-				min="0"
-				required
-			/>
-		</label>
+		<div class="space-y-1.5">
+			<label for="purchase_price" class="block text-xs font-semibold uppercase tracking-wider text-surface-400">
+				Purchase Price <span class="text-error-400 normal-case tracking-normal font-normal">*</span>
+			</label>
+			<div class="relative">
+				<span class="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 font-medium select-none">€</span>
+				<input
+					id="purchase_price"
+					name="purchase_price"
+					type="number"
+					class="w-full bg-surface-900 border border-surface-600/60 rounded-lg pl-8 pr-4 py-2.5 text-white placeholder:text-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors"
+					placeholder="0.00"
+					step="0.01"
+					min="0"
+					required
+				/>
+			</div>
+		</div>
 
 		<!-- Serial Number (optional) -->
-		<label class="label" for="serial_number">
-			<span>Serial Number <span class="text-surface-400 text-xs">(optional)</span></span>
+		<div class="space-y-1.5">
+			<label for="serial_number" class="block text-xs font-semibold uppercase tracking-wider text-surface-400">
+				Serial Number <span class="normal-case tracking-normal font-normal text-surface-500">(optional)</span>
+			</label>
 			<input
 				id="serial_number"
 				name="serial_number"
 				type="text"
-				class="input"
+				class="w-full bg-surface-900 border border-surface-600/60 rounded-lg px-4 py-2.5 text-white placeholder:text-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors"
 				placeholder="e.g. CUH-1216A"
 			/>
-		</label>
+		</div>
 
-		<button type="submit" class="btn variant-filled-primary w-full">Add Console</button>
+		<div class="pt-1">
+			<button type="submit" class="btn variant-filled-primary w-full">Add Console</button>
+		</div>
 	</form>
 </div>
