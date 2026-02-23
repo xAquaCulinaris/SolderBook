@@ -5,7 +5,7 @@
 
 	export let data: PageData;
 
-	const pnlColor = data.metrics.netPnl >= 0 ? 'text-success-500' : 'text-error-500';
+	$: pnlColor = data.metrics.netPnl >= 0 ? 'text-success-500' : 'text-error-500';
 </script>
 
 <svelte:head>
@@ -64,13 +64,13 @@
 			<span class="badge variant-filled-primary">
 				In Progress: {data.statusCounts.in_progress}
 			</span>
-			<span class="badge variant-ghost-primary">
+			<span class="badge variant-filled-success">
 				Sold (Repaired): {data.statusCounts.sold_repaired}
 			</span>
 			<span class="badge variant-filled-warning">
 				Sold (Unrepaired): {data.statusCounts.sold_unrepaired}
 			</span>
-			<span class="badge variant-ghost-surface">
+			<span class="badge variant-soft-error">
 				Parted Out: {data.statusCounts.parted_out}
 			</span>
 		</div>
@@ -94,7 +94,7 @@
 							<th>Status</th>
 							<th>Purchase</th>
 							<th>Sale</th>
-							<th>Added</th>
+							<th>Purchased</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -111,7 +111,7 @@
 								</td>
 								<td>{formatCurrency(c.purchasePrice)}</td>
 								<td>{formatCurrency(c.salePrice)}</td>
-								<td>{formatDate(c.createdAt)}</td>
+								<td>{formatDate(c.purchasedAt)}</td>
 							</tr>
 						{/each}
 					</tbody>

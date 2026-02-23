@@ -16,6 +16,7 @@ export const consoles = sqliteTable('consoles', {
 		.references(() => consoleTypes.id),
 	serialNumber: text('serial_number'),
 	purchasePrice: real('purchase_price').notNull(),
+	purchasedAt: text('purchased_at'),
 	salePrice: real('sale_price'),
 	status: text('status', {
 		enum: ['in_progress', 'sold_repaired', 'sold_unrepaired', 'parted_out']

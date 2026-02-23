@@ -48,15 +48,15 @@ All colors come from the custom `solder` theme in `tailwind.config.ts`. Skeleton
 | Token | Hex | Usage |
 |---|---|---|
 | `success-500` | `#10B981` | Profit, positive P/L, sale price text |
-| `warning-500` | `#EAB308` | Low stock badges, "Sold Unrepaired" status, "Close Console" button |
+| `warning-500` | `#EAB308` | Low stock badges, "Sold Unrepaired" status badge |
 | `error-400` | `#F87171` | Required field asterisks |
 | `error-500` | `#EF4444` | Negative P/L, error alerts, zero stock badge, error messages |
 
-### Tertiary — Violet (reserved, rarely used directly)
+### Tertiary — Violet
 
 | Token | Hex | Usage |
 |---|---|---|
-| `tertiary-500` | `#8B5CF6` | Available but not currently used in UI |
+| `tertiary-500` | `#8B5CF6` | "Close Console" and "Reopen" buttons (`variant-filled-tertiary`) |
 
 ---
 
@@ -156,20 +156,19 @@ Select dropdowns still use Skeleton's `class="select"`.
 | `btn variant-filled-primary` | Primary CTA (Add, Save, Submit) |
 | `btn variant-ghost` | Secondary / cancel actions, Back links |
 | `btn variant-ghost-primary` | Soft primary (View All) |
-| `btn variant-filled-warning` | Destructive-ish actions (Close Console) |
-| `btn btn-sm variant-ghost-error` | Delete / remove (small, inline) |
-| `btn btn-sm variant-ghost` | Inline edit / cancel buttons |
+| `btn variant-filled-tertiary` | Destructive-ish actions (Close Console, Reopen) |
+| `btn btn-sm variant-ghost` | Delete / remove (small, inline) and inline edit / cancel buttons |
 
 ### Badges (status & stock)
 
 Console status — defined in `src/lib/types.ts` `STATUS_COLORS`:
 
-| Status | Class | Color |
-|---|---|---|
-| `in_progress` | `variant-filled-primary` | Purple filled |
-| `sold_repaired` | `variant-ghost-primary` | Purple outline |
-| `sold_unrepaired` | `variant-filled-warning` | Yellow filled |
-| `parted_out` | `variant-ghost-surface` | Grey outline |
+| Status | Class | Color | Rationale |
+|---|---|---|---|
+| `in_progress` | `variant-filled-primary` | Purple filled | Active state, brand color |
+| `sold_repaired` | `variant-filled-success` | Green filled | Best outcome — fixed and sold |
+| `sold_unrepaired` | `variant-filled-warning` | Yellow filled | Acceptable — sold as-is |
+| `parted_out` | `variant-soft-error` | Soft red | Unit consumed/stripped |
 
 Stock level badges on parts:
 
@@ -189,9 +188,26 @@ Stock level badges on parts:
 
 Compact variant for sub-tables (parts/costs within a detail page): `class="table table-compact"`.
 
+When multiple compact tables on the same page must have visually aligned columns, use `table-fixed w-full` and define widths with `<colgroup>`:
+```html
+<table class="table table-compact table-fixed w-full">
+  <colgroup>
+    <col class="w-auto" />   <!-- name/description -->
+    <col class="w-28" />     <!-- cost/amount -->
+    <col class="w-40" />     <!-- date -->
+    <col class="w-12" />     <!-- action button (if present) -->
+  </colgroup>
+  ...
+</table>
+```
+
 Rows are clickable where they navigate: `class="cursor-pointer"` + `on:click={() => goto(...)}`.
 
 Muted/secondary cell text: `class="text-surface-400"`.
+
+### Page Headers
+
+Top-level pages (Dashboard, Consoles, Parts) use a plain `h2` headline. Detail/sub pages prefix it with a small muted breadcrumb link (`text-sm text-surface-400 hover:underline`) in a `space-y-1` wrapper. On the console detail page the status badge sits inline next to the headline (`flex items-center gap-3`), with the action button (Close/Reopen) justified to the right on the same row.
 
 ### Alerts / Errors
 

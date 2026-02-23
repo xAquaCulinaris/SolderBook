@@ -20,23 +20,28 @@
 
 <div class="space-y-6">
 	<!-- Header -->
-	<div class="flex flex-wrap items-start justify-between gap-4">
-		<div class="flex items-center gap-3">
-			<a href="/consoles" class="btn btn-sm variant-ghost">← Back</a>
-			<div>
+	<div class="space-y-1">
+		<a href="/consoles" class="text-sm text-surface-400 hover:underline">← Consoles</a>
+		<div class="flex flex-wrap items-center justify-between gap-4">
+			<div class="flex items-center gap-3">
 				<h1 class="h2">{data.console.consoleType?.name ?? 'Console'}</h1>
 				<span class="badge {STATUS_COLORS[data.console.status as ConsoleStatus]}">
 					{STATUS_LABELS[data.console.status as ConsoleStatus]}
 				</span>
 			</div>
+			{#if data.console.status === 'in_progress'}
+				<a href="/consoles/{data.console.id}/close" class="btn variant-filled-tertiary">
+					Close Console
+				</a>
+			{:else if data.console.closedAt}
+				<div class="flex items-center gap-3">
+					<span class="text-sm text-surface-400">Closed {formatDate(data.console.closedAt)}</span>
+					<form method="POST" action="?/reopen" use:enhance>
+						<button type="submit" class="btn btn-sm variant-ghost">Reopen</button>
+					</form>
+				</div>
+			{/if}
 		</div>
-		{#if data.console.status === 'in_progress'}
-			<a href="/consoles/{data.console.id}/close" class="btn variant-filled-warning">
-				Close Console
-			</a>
-		{:else if data.console.closedAt}
-			<span class="text-sm text-surface-400">Closed {formatDate(data.console.closedAt)}</span>
-		{/if}
 	</div>
 
 	<!-- Info grid -->
@@ -51,8 +56,8 @@
 			</div>
 
 			<div class="space-y-1">
-				<p class="text-sm text-surface-400">Added</p>
-				<p>{formatDate(data.console.createdAt)}</p>
+				<p class="text-sm text-surface-400">Purchased</p>
+				<p>{formatDate(data.console.purchasedAt)}</p>
 			</div>
 
 			{#if data.console.salePrice != null}
@@ -158,12 +163,23 @@
 		<h2 class="h4">Assigned Parts</h2>
 		{#if data.assignments.length > 0}
 			<div class="table-container">
-				<table class="table table-compact">
+				<table class="table table-compact table-fixed w-full">
+					<colgroup>
+						<col class="w-auto" />
+						<col class="w-28" />
+						<col class="w-40" />
+						{#if data.console.status === 'in_progress'}
+							<col class="w-12" />
+						{/if}
+					</colgroup>
 					<thead>
 						<tr>
 							<th>Part</th>
-							<th>Cost at Assignment</th>
-							<th>Assigned</th>
+							<th>Cost</th>
+							<th>Date</th>
+							{#if data.console.status === 'in_progress'}
+								<th></th>
+							{/if}
 						</tr>
 					</thead>
 					<tbody>
@@ -172,6 +188,14 @@
 								<td>{a.partName}</td>
 								<td>{formatCurrency(a.costAtAssignment)}</td>
 								<td>{formatDatetime(a.assignedAt)}</td>
+								{#if data.console.status === 'in_progress'}
+									<td>
+										<form method="POST" action="?/deleteAssignment" use:enhance>
+											<input type="hidden" name="assignment_id" value={a.id} />
+											<button type="submit" class="btn btn-sm variant-ghost">✕</button>
+										</form>
+									</td>
+								{/if}
 							</tr>
 						{/each}
 					</tbody>
@@ -210,7 +234,15 @@
 		<h2 class="h4">Other Costs</h2>
 		{#if data.costs.length > 0}
 			<div class="table-container">
-				<table class="table table-compact">
+				<table class="table table-compact table-fixed w-full">
+					<colgroup>
+						<col class="w-auto" />
+						<col class="w-28" />
+						<col class="w-40" />
+						{#if data.console.status === 'in_progress'}
+							<col class="w-12" />
+						{/if}
+					</colgroup>
 					<thead>
 						<tr>
 							<th>Description</th>
@@ -231,7 +263,7 @@
 									<td>
 										<form method="POST" action="?/deleteCost" use:enhance>
 											<input type="hidden" name="cost_id" value={c.id} />
-											<button type="submit" class="btn btn-sm variant-ghost-error">✕</button>
+											<button type="submit" class="btn btn-sm variant-ghost">✕</button>
 										</form>
 									</td>
 								{/if}

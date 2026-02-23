@@ -15,6 +15,7 @@ export const load: PageServerLoad = async ({ url }) => {
 			consoleTypeId: consoles.consoleTypeId,
 			serialNumber: consoles.serialNumber,
 			purchasePrice: consoles.purchasePrice,
+			purchasedAt: consoles.purchasedAt,
 			salePrice: consoles.salePrice,
 			status: consoles.status,
 			createdAt: consoles.createdAt,
@@ -32,7 +33,7 @@ export const load: PageServerLoad = async ({ url }) => {
 		})
 		.from(consoles)
 		.innerJoin(consoleTypes, eq(consoles.consoleTypeId, consoleTypes.id))
-		.orderBy(sql`${consoles.createdAt} DESC`);
+		.orderBy(sql`${consoles.purchasedAt} DESC`);
 
 	let filtered = rows;
 	if (statusFilter) {

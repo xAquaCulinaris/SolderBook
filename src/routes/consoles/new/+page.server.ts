@@ -15,6 +15,7 @@ export const actions: Actions = {
 		const consoleTypeName = (data.get('console_type') as string)?.trim();
 		const purchasePriceRaw = data.get('purchase_price') as string;
 		const serialNumber = (data.get('serial_number') as string)?.trim() || null;
+		const purchasedAtRaw = (data.get('purchased_at') as string)?.trim();
 
 		if (!consoleTypeName) {
 			return fail(400, { error: 'Console type is required' });
@@ -24,6 +25,8 @@ export const actions: Actions = {
 		if (isNaN(purchasePrice) || purchasePrice < 0) {
 			return fail(400, { error: 'Valid purchase price is required' });
 		}
+
+		const purchasedAt = purchasedAtRaw ? `${purchasedAtRaw} 00:00:00` : undefined;
 
 		// Find or create console type
 		let typeId: number;
@@ -48,7 +51,8 @@ export const actions: Actions = {
 			.values({
 				consoleTypeId: typeId,
 				purchasePrice,
-				serialNumber
+				serialNumber,
+				...(purchasedAt ? { purchasedAt } : {})
 			})
 			.returning({ id: consoles.id });
 

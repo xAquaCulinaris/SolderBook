@@ -83,7 +83,7 @@ SolderBook/
         │   ├── new/                   # Add console (autocomplete type input)
         │   └── [id]/
         │       ├── +page.svelte       # Console detail (notes, parts, costs, summary)
-        │       ├── +page.server.ts    # Actions: updateNotes, updateSerial, addCost, assignPart, deleteCost
+        │       ├── +page.server.ts    # Actions: updateNotes, updateSerial, addCost, assignPart, deleteAssignment, deleteCost, reopen
         │       └── close/             # Close console (status, sale price, repair_successful)
         ├── parts/
         │   ├── +page.svelte           # Parts inventory with stock level badges
@@ -119,8 +119,8 @@ consoles       1──∞  cost_entries
 
 - **Total cost** = `purchase_price + SUM(part_assignments.cost_at_assignment) + SUM(cost_entries.amount)`
 - **Profit/loss** = `sale_price - total_cost` (only for sold consoles)
-- **Status transitions** — only `in_progress` consoles can be closed; `closed_at` is set on transition
-- **Stock** — decremented atomically with part assignment in a DB transaction; assignment fails if `quantity = 0`
+- **Status transitions** — only `in_progress` consoles can be closed; `closed_at` is set on transition. Closed consoles can be reopened (`reopen` action), which clears `closed_at`, `sale_price`, and `repair_successful`.
+- **Stock** — decremented atomically with part assignment in a DB transaction; incremented back on removal. Assignment fails if `quantity = 0`.
 - **Cost snapshot** — `cost_at_assignment` decouples historical repair costs from future price changes
 
 ---

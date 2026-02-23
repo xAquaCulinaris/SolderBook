@@ -123,16 +123,16 @@ export const actions: Actions = {
 		if (part.quantity <= 0) return fail(400, { assignError: 'Part is out of stock' });
 
 		// Insert assignment and decrement stock in a transaction
-		await db.transaction(async (tx) => {
-			await tx.insert(partAssignments).values({
+		db.transaction((tx) => {
+			tx.insert(partAssignments).values({
 				consoleId: id,
 				sparePartId,
 				costAtAssignment: part.unitCost
-			});
-			await tx
-				.update(spareParts)
+			}).run();
+			tx.update(spareParts)
 				.set({ quantity: sql`${spareParts.quantity} - 1` })
-				.where(eq(spareParts.id, sparePartId));
+				.where(eq(spareParts.id, sparePartId))
+				.run();
 		});
 
 		return { success: true };
@@ -144,6 +144,37 @@ export const actions: Actions = {
 		if (!isNaN(costId)) {
 			await db.delete(costEntries).where(eq(costEntries.id, costId));
 		}
+		return { success: true };
+	},
+
+	deleteAssignment: async ({ params, request }) => {
+		const data = await request.formData();
+		const assignmentId = parseInt(data.get('assignment_id') as string);
+		if (isNaN(assignmentId)) return fail(400, { assignError: 'Invalid assignment' });
+
+		const [assignment] = await db
+			.select()
+			.from(partAssignments)
+			.where(eq(partAssignments.id, assignmentId));
+		if (!assignment) return fail(404, { assignError: 'Assignment not found' });
+
+		db.transaction((tx) => {
+			tx.delete(partAssignments).where(eq(partAssignments.id, assignmentId)).run();
+			tx.update(spareParts)
+				.set({ quantity: sql`${spareParts.quantity} + 1` })
+				.where(eq(spareParts.id, assignment.sparePartId))
+				.run();
+		});
+
+		return { success: true };
+	},
+
+	reopen: async ({ params }) => {
+		const id = parseInt(params.id);
+		await db
+			.update(consoles)
+			.set({ status: 'in_progress', closedAt: null, salePrice: null, repairSuccessful: null })
+			.where(eq(consoles.id, id));
 		return { success: true };
 	}
 };

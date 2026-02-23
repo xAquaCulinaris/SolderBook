@@ -11,6 +11,7 @@ export interface Console {
 	consoleTypeId: number;
 	serialNumber: string | null;
 	purchasePrice: number;
+	purchasedAt: string | null;
 	salePrice: number | null;
 	status: ConsoleStatus;
 	repairSuccessful: number | null;
@@ -52,7 +53,7 @@ export const STATUS_LABELS: Record<ConsoleStatus, string> = {
 
 export const STATUS_COLORS: Record<ConsoleStatus, string> = {
 	in_progress: 'variant-filled-primary',
-	sold_repaired: 'variant-ghost-primary',
+	sold_repaired: 'variant-filled-success',
 	sold_unrepaired: 'variant-filled-warning',
-	parted_out: 'variant-ghost-surface'
+	parted_out: 'variant-soft-error'
 };

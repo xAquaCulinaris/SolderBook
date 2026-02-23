@@ -11,8 +11,8 @@
 </svelte:head>
 
 <div class="max-w-lg space-y-6">
-	<div class="flex items-center gap-3">
-		<a href="/parts" class="btn btn-sm variant-ghost">← Back</a>
+	<div class="space-y-1">
+		<a href="/parts" class="text-sm text-surface-400 hover:underline">← Parts</a>
 		<h1 class="h2">Add Spare Part</h1>
 	</div>
 

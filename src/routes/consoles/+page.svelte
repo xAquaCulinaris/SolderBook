@@ -70,7 +70,7 @@
 						<th>Total Cost</th>
 						<th>Sale</th>
 						<th>P/L</th>
-						<th>Added</th>
+						<th>Purchased</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -93,7 +93,7 @@
 							<td class="{pl != null ? (pl >= 0 ? 'text-success-500' : 'text-error-500') : ''}">
 								{pl != null ? formatCurrency(pl) : '—'}
 							</td>
-							<td>{formatDate(c.createdAt)}</td>
+							<td>{formatDate(c.purchasedAt)}</td>
 						</tr>
 					{/each}
 				</tbody>

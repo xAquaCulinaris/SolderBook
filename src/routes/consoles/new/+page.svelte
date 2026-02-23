@@ -8,6 +8,8 @@
 	let typeInput = '';
 	let showSuggestions = false;
 
+	const today = new Date().toISOString().split('T')[0];
+
 	$: suggestions = typeInput.length >= 1
 		? data.types.filter((t) => t.name.toLowerCase().includes(typeInput.toLowerCase()))
 		: [];
@@ -23,8 +25,8 @@
 </svelte:head>
 
 <div class="max-w-lg space-y-6">
-	<div class="flex items-center gap-3">
-		<a href="/consoles" class="btn btn-sm variant-ghost">← Back</a>
+	<div class="space-y-1">
+		<a href="/consoles" class="text-sm text-surface-400 hover:underline">← Consoles</a>
 		<h1 class="h2">Add Console</h1>
 	</div>
 
@@ -66,6 +68,22 @@
 				</div>
 			{/if}
 			<p class="text-xs text-surface-500">Select existing or type a new console type name.</p>
+		</div>
+
+		<!-- Purchase Date -->
+		<div class="space-y-1.5">
+			<label for="purchased_at" class="block text-xs font-semibold uppercase tracking-wider text-surface-400">
+				Purchase Date <span class="text-error-400 normal-case tracking-normal font-normal">*</span>
+			</label>
+			<input
+				id="purchased_at"
+				name="purchased_at"
+				type="date"
+				class="w-full bg-surface-900 border border-surface-600/60 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors"
+				value={today}
+				max={today}
+				required
+			/>
 		</div>
 
 		<!-- Purchase Price -->

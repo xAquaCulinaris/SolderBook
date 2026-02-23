@@ -17,8 +17,8 @@
 </svelte:head>
 
 <div class="max-w-lg space-y-6">
-	<div class="flex items-center gap-3">
-		<a href="/consoles/{data.console.id}" class="btn btn-sm variant-ghost">← Back</a>
+	<div class="space-y-1">
+		<a href="/consoles/{data.console.id}" class="text-sm text-surface-400 hover:underline">← {data.console.consoleType?.name ?? 'Console'}</a>
 		<h1 class="h2">Close Console</h1>
 	</div>
 
@@ -90,7 +90,7 @@
 			<span>Repair was successful</span>
 		</label>
 
-		<button type="submit" class="btn variant-filled-warning w-full font-bold">
+		<button type="submit" class="btn variant-filled-tertiary w-full font-bold">
 			Close Console
 		</button>
 	</form>
