@@ -34,8 +34,8 @@ echo "      pnpm $(pnpm -v)"
 
 # ── 4. Clone repo ─────────────────────────────────────────────────────────────
 echo "[4/7] Cloning repository..."
-mkdir -p "$DATA_DIR"
 git clone "$GIT_REPO" "$APP_DIR"
+mkdir -p "$DATA_DIR"
 
 # ── 5. .env ───────────────────────────────────────────────────────────────────
 echo "[5/7] Configuring environment..."
