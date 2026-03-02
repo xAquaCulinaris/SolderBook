@@ -64,6 +64,9 @@ SolderBook/
 │   ├── extensions.json
 │   ├── launch.json
 │   └── tasks.json
+├── static/                            # Static assets served at root
+│   ├── SolderBook.png                # Full logo (used in README)
+│   └── SolderBook_icon.png           # Icon (used in sidebar top-left)
 ├── drizzle/migrations/                # Auto-generated SQL migrations
 ├── data/                              # SQLite database file (gitignored)
 │   └── solderbook.db

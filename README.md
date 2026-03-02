@@ -1,5 +1,7 @@
 # SolderBook
 
+![SolderBook](static/SolderBook.png)
+
 A local web application to manage a console repair business: tracking purchases, repairs, parts inventory, and sales with profit/loss dashboards.
 
 ## Stack

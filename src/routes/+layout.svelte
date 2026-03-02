@@ -36,16 +36,14 @@
 <AppShell slotSidebarLeft="w-60 flex flex-col bg-surface-900 border-r border-surface-700/40">
 	<svelte:fragment slot="sidebarLeft">
 		<!-- Logo -->
-		<div class="px-5 py-5 border-b border-surface-700/40">
-			<a href="/" class="flex items-center gap-3 no-underline">
-				<div class="w-9 h-9 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-900/50 shrink-0">
-					<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-					</svg>
+		<div class="px-5 py-7 border-b border-surface-700/40">
+			<a href="/" class="flex items-center gap-4 no-underline">
+				<div class="w-14 h-14 shrink-0 bg-surface-900 rounded-xl overflow-hidden">
+					<img src="/SolderBook_icon.png" alt="SolderBook" class="w-full h-full object-contain" />
 				</div>
 				<div>
-					<p class="font-bold text-white text-[15px] leading-tight tracking-tight">SolderBook</p>
-					<p class="text-[11px] text-surface-400 leading-none mt-0.5">Repair Tracker</p>
+					<p class="font-bold text-[19px] leading-tight tracking-tight"><span class="text-white">Solder</span><span class="text-primary-400">Book</span></p>
+					<p class="text-[13px] text-surface-400 leading-none mt-1">Repair Tracker</p>
 				</div>
 			</a>
 		</div>
