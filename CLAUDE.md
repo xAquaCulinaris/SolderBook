@@ -52,6 +52,10 @@ SolderBook/
 ├── seed.ts                            # Dev data seeder (pnpm db:seed)
 ├── Dockerfile
 ├── docker-compose.yml                 # dev + prod profiles
+├── scripts/                           # Deployment scripts (Proxmox LXC)
+│   ├── create-lxc.sh                 # Run on Proxmox host — creates the LXC
+│   ├── setup-app.sh                  # Run inside LXC — installs app from git
+│   └── update-app.sh                 # Run inside LXC — git pull + rebuild
 ├── docs/                              # Project documentation
 │   ├── DESIGN.md                      # Visual design system (colors, components, patterns)
 │   ├── IMPLEMENTATION_PLAN.md         # Full spec (schema, API, phases, deployment)
@@ -141,7 +145,60 @@ pnpm db:studio    # Open Drizzle Studio (DB GUI)
 DATABASE_PATH=./data/solderbook.db
 PORT=3000
 NODE_ENV=development
+ORIGIN=http://<host>:3000   # Required in production (SvelteKit CSRF protection)
 ```
+
+---
+
+## Deployment (Proxmox LXC)
+
+Production target: unprivileged Debian 12 LXC, Node.js 22 via NodeSource, systemd service.
+Source is cloned from `https://github.com/xAquaCulinaris/SolderBook`.
+
+### Scripts
+
+| Script | Where to run | Purpose |
+|---|---|---|
+| `scripts/create-lxc.sh` | Proxmox host | Creates the Debian 12 LXC |
+| `scripts/setup-app.sh` | Inside LXC | Full install: Node, pnpm, git clone, build, systemd |
+| `scripts/update-app.sh` | Inside LXC | `git pull` + rebuild + restart |
+
+### First deploy
+
+```bash
+# 1. On Proxmox host — create the container
+bash scripts/create-lxc.sh
+
+# 2. Push setup script into the container and run it (replace 200 with your LXC ID)
+pct push 200 scripts/setup-app.sh /root/setup-app.sh
+pct exec 200 -- bash /root/setup-app.sh
+```
+
+### Updating
+
+```bash
+# SSH into the LXC, then:
+bash /opt/solderbook/scripts/update-app.sh
+```
+
+### Useful service commands (inside LXC)
+
+```bash
+systemctl status solderbook      # Check status
+journalctl -u solderbook -f      # Live logs
+systemctl restart solderbook     # Restart
+```
+
+### create-lxc.sh config variables
+
+Edit the top of `scripts/create-lxc.sh` to match your Proxmox setup:
+
+| Variable | Default | Description |
+|---|---|---|
+| `LXC_ID` | `200` | Proxmox container ID |
+| `DISK_STORAGE` | `local-lvm` | Storage pool for rootfs (`pvesm status`) |
+| `TMPL_STORAGE` | `local` | Storage pool for templates |
+| `BRIDGE` | `vmbr0` | Network bridge (`ip link \| grep vmbr`) |
 
 ---
 

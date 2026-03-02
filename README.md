@@ -51,24 +51,35 @@ pnpm db:seed
 
 ## Production Deployment (Proxmox LXC)
 
-See [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md#8-proxmox-deployment-plan) for full LXC deployment instructions.
+Deployment targets an unprivileged Debian 12 LXC with Node.js 22 and a systemd service.
+Scripts are in the `scripts/` directory.
 
-**Quick summary:**
-1. Create Debian 12 LXC container
-2. Install Node.js 22 + pnpm
-3. Copy built files: `pnpm build`
-4. Create `.env` with `DATABASE_PATH=/opt/solderbook/data/solderbook.db` and `PORT=3000`
-5. Run `pnpm db:push` to create tables
-6. Set up systemd service
-
-## Docker
+### First deploy
 
 ```bash
-# Development
-docker compose --profile dev up
+# 1. On the Proxmox host — edit config vars at the top first, then:
+bash scripts/create-lxc.sh
 
-# Production
-docker compose --profile prod up --build
+# 2. Push the setup script into the container and run it (replace 200 with your LXC ID)
+pct push 200 scripts/setup-app.sh /root/setup-app.sh
+pct exec 200 -- bash /root/setup-app.sh
+```
+
+`setup-app.sh` handles everything: installs Node.js 22, pnpm, clones the repo, builds the app, runs DB migrations, and starts the systemd service. It prints the URL when done.
+
+### Updating after a new commit
+
+```bash
+# SSH into the LXC, then:
+bash /opt/solderbook/scripts/update-app.sh
+```
+
+### Service commands (inside LXC)
+
+```bash
+systemctl status solderbook      # Check status
+journalctl -u solderbook -f      # Live logs
+systemctl restart solderbook     # Restart
 ```
 
 ## Features
