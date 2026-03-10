@@ -41,7 +41,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const status = data.get('status') as string;
 		const salePriceRaw = data.get('sale_price') as string;
-		const repairSuccessful = data.get('repair_successful') === '1' ? 1 : 0;
+		const repairSuccessful = status === 'sold_repaired' ? 1 : 0;
 
 		const validStatuses = ['sold_repaired', 'sold_unrepaired', 'parted_out'];
 		if (!validStatuses.includes(status)) {

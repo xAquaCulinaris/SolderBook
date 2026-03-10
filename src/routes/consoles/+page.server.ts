@@ -6,6 +6,7 @@ import { sql, eq } from 'drizzle-orm';
 export const load: PageServerLoad = async ({ url }) => {
 	const statusFilter = url.searchParams.get('status') ?? '';
 	const typeFilter = url.searchParams.get('type') ?? '';
+	const moddedFilter = url.searchParams.get('modded') ?? '';
 
 	// Fetch all consoles with type name and cost aggregates
 	const rows = await db
@@ -20,6 +21,7 @@ export const load: PageServerLoad = async ({ url }) => {
 			status: consoles.status,
 			createdAt: consoles.createdAt,
 			closedAt: consoles.closedAt,
+			isModded: consoles.isModded,
 			partsCost: sql<number>`COALESCE((
 				SELECT SUM(pa.cost_at_assignment)
 				FROM part_assignments pa
@@ -42,6 +44,11 @@ export const load: PageServerLoad = async ({ url }) => {
 	if (typeFilter) {
 		filtered = filtered.filter((r) => String(r.consoleTypeId) === typeFilter);
 	}
+	if (moddedFilter === '1') {
+		filtered = filtered.filter((r) => r.isModded === 1);
+	} else if (moddedFilter === '0') {
+		filtered = filtered.filter((r) => r.isModded === 0);
+	}
 
 	const allTypes = await db.select().from(consoleTypes).orderBy(consoleTypes.name);
 
@@ -52,6 +59,7 @@ export const load: PageServerLoad = async ({ url }) => {
 		})),
 		allTypes,
 		statusFilter,
-		typeFilter
+		typeFilter,
+		moddedFilter
 	};
 };

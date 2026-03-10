@@ -1,4 +1,5 @@
 export type ConsoleStatus = 'in_progress' | 'sold_repaired' | 'sold_unrepaired' | 'parted_out';
+export type PartType = 'spare' | 'mod';
 
 export interface ConsoleType {
 	id: number;
@@ -16,6 +17,7 @@ export interface Console {
 	status: ConsoleStatus;
 	repairSuccessful: number | null;
 	repairNotes: string | null;
+	isModded: number;
 	createdAt: string;
 	closedAt: string | null;
 }
@@ -23,6 +25,7 @@ export interface Console {
 export interface SparePart {
 	id: number;
 	name: string;
+	partType: PartType;
 	unitCost: number;
 	quantity: number;
 	createdAt: string;
@@ -56,4 +59,9 @@ export const STATUS_COLORS: Record<ConsoleStatus, string> = {
 	sold_repaired: 'variant-filled-success',
 	sold_unrepaired: 'variant-filled-warning',
 	parted_out: 'variant-soft-error'
+};
+
+export const PART_TYPE_LABELS: Record<PartType, string> = {
+	spare: 'Spare',
+	mod: 'Mod'
 };

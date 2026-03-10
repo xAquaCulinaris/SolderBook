@@ -28,9 +28,14 @@ export const actions: Actions = {
 			return fail(400, { error: 'Valid quantity is required' });
 		}
 
+		const partType = data.get('part_type') as string;
+		if (partType !== 'spare' && partType !== 'mod') {
+			return fail(400, { error: 'Valid part type is required' });
+		}
+
 		const [newPart] = await db
 			.insert(spareParts)
-			.values({ name, unitCost, quantity })
+			.values({ name, unitCost, quantity, partType })
 			.returning({ id: spareParts.id });
 
 		if (typeIds.length > 0) {

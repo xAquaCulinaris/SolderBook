@@ -36,6 +36,23 @@
 			/>
 		</div>
 
+		<!-- Part Type -->
+		<div class="space-y-1.5">
+			<p class="text-xs font-semibold uppercase tracking-wider text-surface-400">
+				Part Type <span class="text-error-400 normal-case tracking-normal font-normal">*</span>
+			</p>
+			<div class="bg-surface-900 border border-surface-600/60 rounded-lg p-3 flex gap-1">
+				<label class="flex items-center gap-2.5 px-2 py-1.5 rounded-md cursor-pointer hover:bg-surface-700/50 transition-colors group">
+					<input type="radio" name="part_type" value="spare" class="appearance-none w-4 h-4 rounded-full border border-surface-600/60 bg-surface-900 checked:bg-primary-500 checked:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors" checked />
+					<span class="text-sm text-surface-300 group-hover:text-white transition-colors">Spare</span>
+				</label>
+				<label class="flex items-center gap-2.5 px-2 py-1.5 rounded-md cursor-pointer hover:bg-surface-700/50 transition-colors group">
+					<input type="radio" name="part_type" value="mod" class="appearance-none w-4 h-4 rounded-full border border-surface-600/60 bg-surface-900 checked:bg-primary-500 checked:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors" />
+					<span class="text-sm text-surface-300 group-hover:text-white transition-colors">Mod</span>
+				</label>
+			</div>
+		</div>
+
 		<!-- Unit Cost -->
 		<div class="space-y-1.5">
 			<label for="unit_cost" class="block text-xs font-semibold uppercase tracking-wider text-surface-400">
@@ -85,7 +102,7 @@
 								type="checkbox"
 								name="console_type_ids"
 								value={t.id}
-								class="checkbox"
+								class="appearance-none w-4 h-4 rounded border border-surface-600/60 bg-surface-900 checked:bg-primary-500 checked:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors"
 							/>
 							<span class="text-sm text-surface-300 group-hover:text-white transition-colors">{t.name}</span>
 						</label>

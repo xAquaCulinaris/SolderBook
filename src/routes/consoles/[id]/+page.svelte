@@ -25,9 +25,12 @@
 		<div class="flex flex-wrap items-center justify-between gap-4">
 			<div class="flex items-center gap-3">
 				<h1 class="h2">{data.console.consoleType?.name ?? 'Console'}</h1>
-				<span class="badge {STATUS_COLORS[data.console.status as ConsoleStatus]}">
+				<span class="badge min-w-[8.5rem] text-center {STATUS_COLORS[data.console.status as ConsoleStatus]}">
 					{STATUS_LABELS[data.console.status as ConsoleStatus]}
 				</span>
+				{#if data.console.isModded}
+					<span class="badge min-w-[4.5rem] text-center variant-filled-tertiary">Modded</span>
+				{/if}
 			</div>
 			{#if data.console.status === 'in_progress'}
 				<a href="/consoles/{data.console.id}/close" class="btn variant-filled-tertiary">
@@ -68,6 +71,20 @@
 					</p>
 				</div>
 			{/if}
+
+			<!-- Modded -->
+			<div class="space-y-1">
+				<p class="text-sm text-surface-400">Modded</p>
+				{#if data.console.status === 'in_progress'}
+					<form method="POST" action="?/toggleModded" use:enhance class="inline">
+						<button type="submit" class="btn btn-sm {data.console.isModded ? 'variant-filled-tertiary' : 'variant-ghost'}">
+							{data.console.isModded ? 'Yes' : 'No'}
+						</button>
+					</form>
+				{:else}
+					<p>{data.console.isModded ? 'Yes' : 'No'}</p>
+				{/if}
+			</div>
 
 			<!-- Serial Number -->
 			<div class="space-y-1">
@@ -166,6 +183,7 @@
 				<table class="table table-compact table-fixed w-full">
 					<colgroup>
 						<col class="w-auto" />
+						<col class="w-20" />
 						<col class="w-28" />
 						<col class="w-40" />
 						{#if data.console.status === 'in_progress'}
@@ -175,6 +193,7 @@
 					<thead>
 						<tr>
 							<th>Part</th>
+							<th>Type</th>
 							<th>Cost</th>
 							<th>Date</th>
 							{#if data.console.status === 'in_progress'}
@@ -186,6 +205,11 @@
 						{#each data.assignments as a}
 							<tr>
 								<td>{a.partName}</td>
+								<td>
+									<span class="badge badge-sm min-w-[4rem] text-center {a.partType === 'mod' ? 'variant-filled-tertiary' : 'variant-ghost-surface'}">
+										{a.partType === 'mod' ? 'Mod' : 'Spare'}
+									</span>
+								</td>
 								<td>{formatCurrency(a.costAtAssignment)}</td>
 								<td>{formatDatetime(a.assignedAt)}</td>
 								{#if data.console.status === 'in_progress'}

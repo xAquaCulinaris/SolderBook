@@ -25,6 +25,7 @@ export const consoles = sqliteTable('consoles', {
 		.default('in_progress'),
 	repairSuccessful: integer('repair_successful'),
 	repairNotes: text('repair_notes'),
+	isModded: integer('is_modded').notNull().default(0),
 	createdAt: text('created_at')
 		.notNull()
 		.default(sql`(datetime('now'))`),
@@ -34,6 +35,7 @@ export const consoles = sqliteTable('consoles', {
 export const spareParts = sqliteTable('spare_parts', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	name: text('name').notNull(),
+	partType: text('part_type', { enum: ['spare', 'mod'] }).notNull().default('spare'),
 	unitCost: real('unit_cost').notNull(),
 	quantity: integer('quantity').notNull().default(0),
 	createdAt: text('created_at')

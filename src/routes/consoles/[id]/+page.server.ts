@@ -28,6 +28,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			id: partAssignments.id,
 			sparePartId: partAssignments.sparePartId,
 			partName: spareParts.name,
+			partType: spareParts.partType,
 			costAtAssignment: partAssignments.costAtAssignment,
 			assignedAt: partAssignments.assignedAt
 		})
@@ -166,6 +167,20 @@ export const actions: Actions = {
 				.run();
 		});
 
+		return { success: true };
+	},
+
+	toggleModded: async ({ params }) => {
+		const id = parseInt(params.id);
+		const console_ = await db.query.consoles.findFirst({
+			where: eq(consoles.id, id)
+		});
+		if (!console_) return fail(404, { error: 'Console not found' });
+
+		await db
+			.update(consoles)
+			.set({ isModded: console_.isModded ? 0 : 1 })
+			.where(eq(consoles.id, id));
 		return { success: true };
 	},
 

@@ -92,6 +92,7 @@
 						<tr>
 							<th>Type</th>
 							<th>Status</th>
+							<th>Modded</th>
 							<th>Purchase</th>
 							<th>Sale</th>
 							<th>Purchased</th>
@@ -105,9 +106,16 @@
 							>
 								<td>{c.consoleType?.name ?? '—'}</td>
 								<td>
-									<span class="badge {STATUS_COLORS[c.status]}">
+									<span class="badge min-w-[8.5rem] text-center {STATUS_COLORS[c.status]}">
 										{STATUS_LABELS[c.status]}
 									</span>
+								</td>
+								<td>
+									{#if c.isModded}
+										<span class="badge min-w-[4.5rem] text-center variant-filled-tertiary">Modded</span>
+									{:else}
+										<span class="text-surface-500">—</span>
+									{/if}
 								</td>
 								<td>{formatCurrency(c.purchasePrice)}</td>
 								<td>{formatCurrency(c.salePrice)}</td>

@@ -9,11 +9,13 @@
 
 	let statusFilter = data.statusFilter;
 	let typeFilter = data.typeFilter;
+	let moddedFilter = data.moddedFilter;
 
 	function applyFilter() {
 		const params = new URLSearchParams();
 		if (statusFilter) params.set('status', statusFilter);
 		if (typeFilter) params.set('type', typeFilter);
+		if (moddedFilter) params.set('modded', moddedFilter);
 		goto(`/consoles?${params.toString()}`);
 	}
 </script>
@@ -49,7 +51,15 @@
 				{/each}
 			</select>
 		</label>
-		{#if statusFilter || typeFilter}
+		<label class="label flex-1 min-w-[160px]">
+			<span class="text-sm">Modded</span>
+			<select class="select" bind:value={moddedFilter} on:change={applyFilter}>
+				<option value="">All</option>
+				<option value="1">Modded</option>
+				<option value="0">Not Modded</option>
+			</select>
+		</label>
+		{#if statusFilter || typeFilter || moddedFilter}
 			<a href="/consoles" class="btn btn-sm variant-ghost">Clear filters</a>
 		{/if}
 	</div>
@@ -65,6 +75,7 @@
 					<tr>
 						<th>Type</th>
 						<th>Status</th>
+						<th>Modded</th>
 						<th>Serial</th>
 						<th>Purchase</th>
 						<th>Total Cost</th>
@@ -82,9 +93,16 @@
 						>
 							<td class="font-medium">{c.typeName}</td>
 							<td>
-								<span class="badge {STATUS_COLORS[c.status as ConsoleStatus]}">
+								<span class="badge min-w-[8.5rem] text-center {STATUS_COLORS[c.status as ConsoleStatus]}">
 									{STATUS_LABELS[c.status as ConsoleStatus]}
 								</span>
+							</td>
+							<td>
+								{#if c.isModded}
+									<span class="badge min-w-[4.5rem] text-center variant-filled-tertiary">Modded</span>
+								{:else}
+									<span class="text-surface-500">—</span>
+								{/if}
 							</td>
 							<td class="text-surface-400">{c.serialNumber ?? '—'}</td>
 							<td>{formatCurrency(c.purchasePrice)}</td>

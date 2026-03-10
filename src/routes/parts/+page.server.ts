@@ -8,6 +8,7 @@ export const load: PageServerLoad = async () => {
 		.select({
 			id: spareParts.id,
 			name: spareParts.name,
+			partType: spareParts.partType,
 			unitCost: spareParts.unitCost,
 			quantity: spareParts.quantity,
 			createdAt: spareParts.createdAt,

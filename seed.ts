@@ -37,14 +37,16 @@ const [ps4Fat, ps4Slim, switchLite, xbox360] = await db
 console.log('  ✓ Console types');
 
 // Spare parts
-const [hdmi, fan, battery, analogStick, thermalPaste] = await db
+const [hdmi, fan, battery, analogStick, thermalPaste, customShell, ledKit] = await db
 	.insert(spareParts)
 	.values([
 		{ name: 'HDMI Port', unitCost: 3.5, quantity: 8 },
 		{ name: 'Cooling Fan (PS4)', unitCost: 12.0, quantity: 5 },
 		{ name: 'Switch Lite Battery', unitCost: 18.0, quantity: 4 },
 		{ name: 'Analog Stick', unitCost: 4.5, quantity: 20 },
-		{ name: 'Thermal Paste (syringe)', unitCost: 2.0, quantity: 10 }
+		{ name: 'Thermal Paste (syringe)', unitCost: 2.0, quantity: 10 },
+		{ name: 'PS4 Custom Shell', unitCost: 15.0, quantity: 6, partType: 'mod' },
+		{ name: 'LED Light Kit', unitCost: 8.0, quantity: 12, partType: 'mod' }
 	])
 	.returning();
 
@@ -60,7 +62,12 @@ await db.insert(sparePartConsoleTypes).values([
 	{ sparePartId: analogStick.id, consoleTypeId: switchLite.id },
 	{ sparePartId: thermalPaste.id, consoleTypeId: ps4Fat.id },
 	{ sparePartId: thermalPaste.id, consoleTypeId: ps4Slim.id },
-	{ sparePartId: thermalPaste.id, consoleTypeId: xbox360.id }
+	{ sparePartId: thermalPaste.id, consoleTypeId: xbox360.id },
+	{ sparePartId: customShell.id, consoleTypeId: ps4Fat.id },
+	{ sparePartId: customShell.id, consoleTypeId: ps4Slim.id },
+	{ sparePartId: ledKit.id, consoleTypeId: ps4Fat.id },
+	{ sparePartId: ledKit.id, consoleTypeId: ps4Slim.id },
+	{ sparePartId: ledKit.id, consoleTypeId: xbox360.id }
 ]);
 
 console.log('  ✓ Part compatibility');
@@ -76,7 +83,8 @@ const [c1, c2, c3, c4, c5] = await db
 			status: 'sold_repaired',
 			salePrice: 120.0,
 			repairSuccessful: 1,
-			repairNotes: 'Replaced HDMI port. Reapplied thermal paste. Cleaned fan.',
+			repairNotes: 'Replaced HDMI port. Reapplied thermal paste. Cleaned fan. Custom shell installed.',
+			isModded: 1,
 			closedAt: '2026-01-15 14:30:00'
 		},
 		{

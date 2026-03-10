@@ -44,54 +44,54 @@
 		<div class="alert variant-filled-error"><p>{form.error}</p></div>
 	{/if}
 
-	<form method="POST" use:enhance class="card p-6 space-y-5">
+	<form method="POST" use:enhance class="bg-surface-800/50 border border-surface-700/40 rounded-xl p-6 space-y-5">
 		<!-- Status -->
-		<fieldset class="space-y-2">
-			<legend class="font-semibold">Outcome <span class="text-error-500">*</span></legend>
-			<label class="flex items-center gap-3 cursor-pointer">
-				<input type="radio" name="status" value="sold_repaired" bind:group={status} class="radio" />
-				<span>Sold — Repaired</span>
-			</label>
-			<label class="flex items-center gap-3 cursor-pointer">
-				<input type="radio" name="status" value="sold_unrepaired" bind:group={status} class="radio" />
-				<span>Sold — Unrepaired</span>
-			</label>
-			<label class="flex items-center gap-3 cursor-pointer">
-				<input type="radio" name="status" value="parted_out" bind:group={status} class="radio" />
-				<span>Parted Out</span>
-			</label>
-		</fieldset>
+		<div class="space-y-1.5">
+			<p class="text-xs font-semibold uppercase tracking-wider text-surface-400">
+				Outcome <span class="text-error-400 normal-case tracking-normal font-normal">*</span>
+			</p>
+			<div class="bg-surface-900 border border-surface-600/60 rounded-lg p-3 space-y-1">
+				<label class="flex items-center gap-2.5 px-2 py-1.5 rounded-md cursor-pointer hover:bg-surface-700/50 transition-colors group">
+					<input type="radio" name="status" value="sold_repaired" bind:group={status} class="appearance-none w-4 h-4 rounded-full border border-surface-600/60 bg-surface-900 checked:bg-primary-500 checked:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors" />
+					<span class="text-sm text-surface-300 group-hover:text-white transition-colors">Sold — Repaired</span>
+				</label>
+				<label class="flex items-center gap-2.5 px-2 py-1.5 rounded-md cursor-pointer hover:bg-surface-700/50 transition-colors group">
+					<input type="radio" name="status" value="sold_unrepaired" bind:group={status} class="appearance-none w-4 h-4 rounded-full border border-surface-600/60 bg-surface-900 checked:bg-primary-500 checked:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors" />
+					<span class="text-sm text-surface-300 group-hover:text-white transition-colors">Sold — Unrepaired</span>
+				</label>
+				<label class="flex items-center gap-2.5 px-2 py-1.5 rounded-md cursor-pointer hover:bg-surface-700/50 transition-colors group">
+					<input type="radio" name="status" value="parted_out" bind:group={status} class="appearance-none w-4 h-4 rounded-full border border-surface-600/60 bg-surface-900 checked:bg-primary-500 checked:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors" />
+					<span class="text-sm text-surface-300 group-hover:text-white transition-colors">Parted Out</span>
+				</label>
+			</div>
+		</div>
 
 		<!-- Sale Price (conditional) -->
 		{#if showSalePrice}
-			<label class="label" for="sale_price">
-				<span>Sale Price (€) <span class="text-error-500">*</span></span>
-				<input
-					id="sale_price"
-					name="sale_price"
-					type="number"
-					class="input"
-					placeholder="0.00"
-					step="0.01"
-					min="0"
-					required
-				/>
-			</label>
+			<div class="space-y-1.5">
+				<label for="sale_price" class="block text-xs font-semibold uppercase tracking-wider text-surface-400">
+					Sale Price <span class="text-error-400 normal-case tracking-normal font-normal">*</span>
+				</label>
+				<div class="relative">
+					<span class="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 font-medium select-none">€</span>
+					<input
+						id="sale_price"
+						name="sale_price"
+						type="number"
+						class="w-full bg-surface-900 border border-surface-600/60 rounded-lg pl-8 pr-4 py-2.5 text-white placeholder:text-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors"
+						placeholder="0.00"
+						step="0.01"
+						min="0"
+						required
+					/>
+				</div>
+			</div>
 		{/if}
 
-		<!-- Repair Successful -->
-		<label class="flex items-center gap-3 cursor-pointer">
-			<input
-				type="checkbox"
-				name="repair_successful"
-				value="1"
-				class="checkbox"
-			/>
-			<span>Repair was successful</span>
-		</label>
-
-		<button type="submit" class="btn variant-filled-tertiary w-full font-bold">
-			Close Console
-		</button>
+		<div class="pt-1">
+			<button type="submit" class="btn variant-filled-tertiary w-full font-bold">
+				Close Console
+			</button>
+		</div>
 	</form>
 </div>
