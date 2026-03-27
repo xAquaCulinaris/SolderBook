@@ -8,7 +8,7 @@ import {
 	spareParts,
 	sparePartConsoleTypes
 } from '$lib/server/schema';
-import { fail, error } from '@sveltejs/kit';
+import { fail, error, redirect } from '@sveltejs/kit';
 import { eq, and, gt, sql } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -85,12 +85,25 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	updateSerial: async ({ params, request }) => {
+	updateInfo: async ({ params, request }) => {
 		const id = parseInt(params.id);
 		const data = await request.formData();
-		const serialNumber = (data.get('serial_number') as string)?.trim() || null;
 
-		await db.update(consoles).set({ serialNumber }).where(eq(consoles.id, id));
+		const purchasePriceRaw = data.get('purchase_price') as string;
+		const purchasedAt = (data.get('purchased_at') as string)?.trim() || null;
+		const color = (data.get('color') as string)?.trim() || null;
+		const serialNumber = (data.get('serial_number') as string)?.trim() || null;
+		const isModded = data.get('is_modded') === '1' ? 1 : 0;
+
+		const purchasePrice = parseFloat(purchasePriceRaw);
+		if (isNaN(purchasePrice) || purchasePrice < 0) {
+			return fail(400, { infoError: 'Ungültiger Einkaufspreis' });
+		}
+
+		await db
+			.update(consoles)
+			.set({ purchasePrice, purchasedAt, color, serialNumber, isModded })
+			.where(eq(consoles.id, id));
 		return { success: true };
 	},
 
@@ -170,20 +183,6 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	toggleModded: async ({ params }) => {
-		const id = parseInt(params.id);
-		const console_ = await db.query.consoles.findFirst({
-			where: eq(consoles.id, id)
-		});
-		if (!console_) return fail(404, { error: 'Console not found' });
-
-		await db
-			.update(consoles)
-			.set({ isModded: console_.isModded ? 0 : 1 })
-			.where(eq(consoles.id, id));
-		return { success: true };
-	},
-
 	reopen: async ({ params }) => {
 		const id = parseInt(params.id);
 		await db
@@ -191,5 +190,11 @@ export const actions: Actions = {
 			.set({ status: 'in_progress', closedAt: null, salePrice: null, repairSuccessful: null })
 			.where(eq(consoles.id, id));
 		return { success: true };
+	},
+
+	deleteConsole: async ({ params }) => {
+		const id = parseInt(params.id);
+		await db.delete(consoles).where(eq(consoles.id, id));
+		redirect(303, '/consoles');
 	}
 };

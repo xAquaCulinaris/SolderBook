@@ -8,15 +8,74 @@
 	export let data: PageData;
 	export let form: ActionData;
 
-	let editingSerial = false;
+	const COLORS = [
+		{ label: '— none —', value: '' },
+		// Switch Lite colors
+		{ label: 'Turquoise', value: 'Turquoise' },
+		{ label: 'Yellow', value: 'Yellow' },
+		{ label: 'Coral', value: 'Coral' },
+		{ label: 'Grey', value: 'Grey' },
+		{ label: 'Blue', value: 'Blue' },
+		{ label: 'White', value: 'White' },
+		// Standard
+		{ label: 'Black', value: 'Black' },
+		{ label: 'Red', value: 'Red' },
+		{ label: 'Silver', value: 'Silver' },
+	];
+
+	let editingInfo = false;
 	let editingNotes = false;
+	let showDeleteConfirm = false;
+
+	let purchasePriceValue = data.console.purchasePrice;
+	let purchasedAtValue = (data.console.purchasedAt ?? '').slice(0, 10);
+	let colorValue = data.console.color ?? '';
 	let serialValue = data.console.serialNumber ?? '';
+	let isModdedValue = data.console.isModded ? '1' : '0';
+
+	function openInfoEdit() {
+		purchasePriceValue = data.console.purchasePrice;
+		purchasedAtValue = (data.console.purchasedAt ?? '').slice(0, 10);
+		colorValue = data.console.color ?? '';
+		serialValue = data.console.serialNumber ?? '';
+		isModdedValue = data.console.isModded ? '1' : '0';
+		editingInfo = true;
+	}
+
+	function cancelInfoEdit() {
+		editingInfo = false;
+	}
+
 	let notesValue = data.console.repairNotes ?? '';
 </script>
 
 <svelte:head>
 	<title>{data.console.consoleType?.name ?? 'Console'} — SolderBook</title>
 </svelte:head>
+
+<!-- Delete confirm modal -->
+{#if showDeleteConfirm}
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+		<div class="card p-6 space-y-4 w-full max-w-sm mx-4">
+			<h3 class="h4">Delete Console?</h3>
+			<p class="text-sm text-surface-300">
+				This action cannot be undone. All associated data (parts, costs) will also be deleted.
+			</p>
+			<div class="flex gap-3 justify-end">
+				<button
+					type="button"
+					class="btn btn-sm variant-ghost"
+					on:click={() => (showDeleteConfirm = false)}
+				>
+					Cancel
+				</button>
+				<form method="POST" action="?/deleteConsole" use:enhance>
+					<button type="submit" class="btn btn-sm variant-filled-error">Delete</button>
+				</form>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <div class="space-y-6">
 	<!-- Header -->
@@ -31,19 +90,29 @@
 				{#if data.console.isModded}
 					<span class="badge min-w-[4.5rem] text-center variant-filled-tertiary">Modded</span>
 				{/if}
+				{#if data.console.color}
+					<span class="badge variant-ghost-surface">{data.console.color}</span>
+				{/if}
 			</div>
-			{#if data.console.status === 'in_progress'}
-				<a href="/consoles/{data.console.id}/close" class="btn variant-filled-tertiary">
-					Close Console
-				</a>
-			{:else if data.console.closedAt}
-				<div class="flex items-center gap-3">
+			<div class="flex items-center gap-2">
+				{#if data.console.status === 'in_progress'}
+					<a href="/consoles/{data.console.id}/close" class="btn variant-filled-tertiary">
+						Close Console
+					</a>
+				{:else if data.console.closedAt}
 					<span class="text-sm text-surface-400">Closed {formatDate(data.console.closedAt)}</span>
 					<form method="POST" action="?/reopen" use:enhance>
 						<button type="submit" class="btn btn-sm variant-ghost">Reopen</button>
 					</form>
-				</div>
-			{/if}
+				{/if}
+				<button
+					type="button"
+					class="btn btn-sm variant-ghost-error"
+					on:click={() => (showDeleteConfirm = true)}
+				>
+					Delete
+				</button>
+			</div>
 		</div>
 	</div>
 
@@ -51,65 +120,118 @@
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 		<!-- Basic Info -->
 		<div class="card p-5 space-y-4">
-			<h2 class="h4">Info</h2>
-
-			<div class="space-y-1">
-				<p class="text-sm text-surface-400">Purchase Price</p>
-				<p class="font-semibold text-lg">{formatCurrency(data.console.purchasePrice)}</p>
-			</div>
-
-			<div class="space-y-1">
-				<p class="text-sm text-surface-400">Purchased</p>
-				<p>{formatDate(data.console.purchasedAt)}</p>
-			</div>
-
-			{#if data.console.salePrice != null}
-				<div class="space-y-1">
-					<p class="text-sm text-surface-400">Sale Price</p>
-					<p class="font-semibold text-lg text-success-500">
-						{formatCurrency(data.console.salePrice)}
-					</p>
-				</div>
-			{/if}
-
-			<!-- Modded -->
-			<div class="space-y-1">
-				<p class="text-sm text-surface-400">Modded</p>
-				{#if data.console.status === 'in_progress'}
-					<form method="POST" action="?/toggleModded" use:enhance class="inline">
-						<button type="submit" class="btn btn-sm {data.console.isModded ? 'variant-filled-tertiary' : 'variant-ghost'}">
-							{data.console.isModded ? 'Yes' : 'No'}
-						</button>
-					</form>
-				{:else}
-					<p>{data.console.isModded ? 'Yes' : 'No'}</p>
+			<div class="flex items-center justify-between">
+				<h2 class="h4">Info</h2>
+				{#if !editingInfo}
+					<button class="btn btn-sm variant-ghost" on:click={openInfoEdit}>Edit</button>
 				{/if}
 			</div>
 
-			<!-- Serial Number -->
-			<div class="space-y-1">
-				<p class="text-sm text-surface-400">Serial Number</p>
-				{#if editingSerial}
-					<form method="POST" action="?/updateSerial" use:enhance on:submit={() => (editingSerial = false)} class="flex gap-2">
+			{#if editingInfo}
+				<form
+					method="POST"
+					action="?/updateInfo"
+					use:enhance
+					on:submit={() => (editingInfo = false)}
+					class="space-y-3"
+				>
+					<label class="label">
+						<span class="text-sm">Purchase Price (€)</span>
+						<input
+							name="purchase_price"
+							type="number"
+							class="input"
+							step="0.01"
+							min="0"
+							bind:value={purchasePriceValue}
+							required
+						/>
+					</label>
+					<label class="label">
+						<span class="text-sm">Purchase Date</span>
+						<input
+							name="purchased_at"
+							type="date"
+							class="input"
+							bind:value={purchasedAtValue}
+						/>
+					</label>
+					<label class="label">
+						<span class="text-sm">Serial Number</span>
 						<input
 							name="serial_number"
 							type="text"
-							class="input input-sm flex-1"
-							bind:value={serialValue}
+							class="input"
 							placeholder="Serial number"
+							bind:value={serialValue}
 						/>
+					</label>
+					<label class="label">
+						<span class="text-sm">Color</span>
+						<select name="color" class="select" bind:value={colorValue}>
+							{#each COLORS as c}
+								<option value={c.value}>{c.label}</option>
+							{/each}
+						</select>
+					</label>
+					<div class="space-y-1">
+						<p class="text-sm">Modded</p>
+						<div class="flex gap-2">
+							<label class="flex items-center gap-2 cursor-pointer">
+								<input type="radio" name="is_modded" value="0" class="radio" bind:group={isModdedValue} />
+								<span class="text-sm">No</span>
+							</label>
+							<label class="flex items-center gap-2 cursor-pointer">
+								<input type="radio" name="is_modded" value="1" class="radio" bind:group={isModdedValue} />
+								<span class="text-sm">Yes</span>
+							</label>
+						</div>
+					</div>
+					{#if form?.infoError}
+						<p class="text-sm text-error-500">{form.infoError}</p>
+					{/if}
+					<div class="flex gap-2">
 						<button type="submit" class="btn btn-sm variant-filled-primary">Save</button>
-						<button type="button" class="btn btn-sm variant-ghost" on:click={() => (editingSerial = false)}>Cancel</button>
-					</form>
-				{:else}
-					<div class="flex items-center gap-2">
-						<p>{data.console.serialNumber ?? '—'}</p>
-						{#if data.console.status === 'in_progress'}
-							<button class="btn btn-sm variant-ghost" on:click={() => (editingSerial = true)}>Edit</button>
-						{/if}
+						<button type="button" class="btn btn-sm variant-ghost" on:click={cancelInfoEdit}>
+							Cancel
+						</button>
+					</div>
+				</form>
+			{:else}
+				<div class="space-y-1">
+					<p class="text-sm text-surface-400">Purchase Price</p>
+					<p class="font-semibold text-lg">{formatCurrency(data.console.purchasePrice)}</p>
+				</div>
+
+				<div class="space-y-1">
+					<p class="text-sm text-surface-400">Purchase Date</p>
+					<p>{formatDate(data.console.purchasedAt)}</p>
+				</div>
+
+				<div class="space-y-1">
+					<p class="text-sm text-surface-400">Serial Number</p>
+					<p>{data.console.serialNumber ?? '—'}</p>
+				</div>
+
+				<div class="space-y-1">
+					<p class="text-sm text-surface-400">Color</p>
+					<p>{data.console.color ?? '—'}</p>
+				</div>
+
+				<div class="space-y-1">
+					<p class="text-sm text-surface-400">Modded</p>
+					<p>{data.console.isModded ? 'Yes' : 'No'}</p>
+				</div>
+
+				{#if data.console.salePrice != null}
+					<div class="space-y-1">
+						<p class="text-sm text-surface-400">Sale Price</p>
+						<p class="font-semibold text-lg text-success-500">
+							{formatCurrency(data.console.salePrice)}
+						</p>
 					</div>
 				{/if}
-			</div>
+			{/if}
 		</div>
 
 		<!-- Cost Summary -->

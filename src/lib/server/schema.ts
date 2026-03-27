@@ -26,6 +26,7 @@ export const consoles = sqliteTable('consoles', {
 	repairSuccessful: integer('repair_successful'),
 	repairNotes: text('repair_notes'),
 	isModded: integer('is_modded').notNull().default(0),
+	color: text('color'),
 	createdAt: text('created_at')
 		.notNull()
 		.default(sql`(datetime('now'))`),

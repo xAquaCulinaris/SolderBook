@@ -90,7 +90,7 @@ SolderBook/
         │   ├── new/                   # Add console (autocomplete type input)
         │   └── [id]/
         │       ├── +page.svelte       # Console detail (notes, parts, costs, summary)
-        │       ├── +page.server.ts    # Actions: updateNotes, updateSerial, addCost, assignPart, deleteAssignment, deleteCost, toggleModded, reopen
+        │       ├── +page.server.ts    # Actions: updateNotes, updateSerial, updateInfo, addCost, assignPart, deleteAssignment, deleteCost, toggleModded, reopen, deleteConsole
         │       └── close/             # Close console (status, sale price, repair_successful)
         ├── parts/
         │   ├── +page.svelte           # Parts inventory with stock level badges
@@ -116,7 +116,7 @@ consoles       1──∞  cost_entries
 ### Tables
 
 - **`console_types`** — Dynamic console types (PS4 Fat, Switch Lite, etc.)
-- **`consoles`** — Core entity. Status enum: `in_progress | sold_repaired | sold_unrepaired | parted_out`. `is_modded` integer flag (0/1) tracks whether a console has been modded.
+- **`consoles`** — Core entity. Status enum: `in_progress | sold_repaired | sold_unrepaired | parted_out`. `is_modded` integer flag (0/1) tracks whether a console has been modded. `color` nullable text stores the console's color as a CSS hex string.
 - **`spare_parts`** — Parts inventory with `unit_cost`, `quantity`, and `part_type` (`'spare'` or `'mod'`)
 - **`spare_part_console_types`** — Junction table (part ↔ console type compatibility)
 - **`part_assignments`** — Part assigned to console; stores `cost_at_assignment` snapshot
